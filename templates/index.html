@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Development Services</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">kovachvl</a>
+        </div>
+        <div class="nav-buttons">
+            <a href="/about">About</a>
+            <a href="/registration" class="registr-btn">Sign Up</a>
+            <a href="/login" class="login-btn">Login</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <h1>Creating Modern Web Solutions</h1>
+            <p class="hero-text">Turning Your Ideas Into Successful Online Projects</p>
+            <a href="/registration" class="cta-button">Start Your Project <i class="fas fa-arrow-right"></i></a>
+        </section>
+
+        <section class="services">
+            <h2>Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-laptop-code"></i>
+                    <h3>Web Development</h3>
+                    <p>Creating modern and functional websites of any complexity</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Responsive Design</h3>
+                    <p>Your website will look great on all devices</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-search"></i>
+                    <h3>SEO Optimization</h3>
+                    <p>Promoting your website in search engines</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-paint-brush"></i>
+                    <h3>UI/UX Design</h3>
+                    <p>Creating attractive and user-friendly interfaces</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="why-us">
+            <h2>Why Choose Us</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Fast Development</h3>
+                    <p>We meet deadlines and keep you updated on progress</p>
+                </div>
+                <div class="benefit-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Reliability</h3>
+                    <p>We guarantee quality and post-launch support</p>
+                </div>
+                <div class="benefit-card">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <h3>Fair Pricing</h3>
+                    <p>Transparent pricing with no hidden fees</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-section">
+            <h2>Ready to Discuss Your Project?</h2>
+            <p>Sign up to get full access to our services information</p>
+            <div class="cta-buttons">
+                <a href="/registration" class="cta-button">Sign Up</a>
+                <a href="/login" class="cta-button secondary">Login</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 kovachvl. All rights reserved.</p>
+    </footer>
+</body>
+</html>
+

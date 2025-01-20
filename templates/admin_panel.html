@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_panel.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">kovachvl</a>
+        </div>
+        <div class="profile-info">
+            <span>Welcome, {{ session['username'] }}</span>
+            <div class="profile-details">
+                <a href="/profile?id={{ session['user_id'] }}" class="profile-link" title="Admin ID: {{ session['user_id'] }}">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="user-id">ID: {{ session['user_id'] }}</span>
+                </a>
+            </div>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="sidebar">
+            <div class="stats-section">
+                <h3>Statistics</h3>
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <span>Total Users: {{ total_users }}</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Total Orders: {{ total_orders }}</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>Total Revenue: ${{ total_revenue }}</span>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#users"><i class="fas fa-users"></i> Users</a></li>
+                <li><a href="#transactions"><i class="fas fa-history"></i> Transactions</a></li>
+                <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <section id="transactions" class="transactions-section">
+                <h2>Recent Transactions</h2>
+                <div class="transactions-list">
+                    {% for transaction in transactions %}
+                    <div class="transaction-card">
+                        <div class="transaction-info">
+                            <span class="username">{{ transaction.username }}</span>
+                            <span class="service">{{ transaction.service }}</span>
+                            <span class="amount">${{ transaction.amount }}</span>
+                            <span class="commission">Commission: ${{ transaction.commission }}</span>
+                            <span class="date">{{ transaction.date }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

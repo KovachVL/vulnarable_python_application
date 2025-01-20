@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Our Team</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">kovachvl</a>
+        </div>
+        <div class="nav-buttons">
+            <a href="/about">About</a>
+            <a href="/registration" class="registr-btn">Sign Up</a>
+            <a href="/login" class="login-btn">Login</a>
+        </div>
+    </header>
+
+    <main class="about-main">
+        <div class="team-container">
+            <h1>Our Team</h1>
+            
+            <div class="team-members">
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="{{ url_for('static', filename='images/developer1.jpg') }}" alt="Developer 1">
+                    </div>
+                    <h3>Developer Name 1</h3>
+                    <p>Backend Developer</p>
+                    <p class="member-description">Experience and skills description of the developer</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="{{ url_for('static', filename='images/developer2.jpg') }}" alt="Developer 2">
+                    </div>
+                    <h3>Developer Name 2</h3>
+                    <p>Frontend Developer</p>
+                    <p class="member-description">Experience and skills description of the developer</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="{{ url_for('static', filename='images/designer.jpg') }}" alt="Designer">
+                    </div>
+                    <h3>Designer Name</h3>
+                    <p>UI/UX Designer</p>
+                    <p class="member-description">Experience and skills description of the designer</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Copyright &copy; 2025 kovachvl. All rights reserved.</p>
+    </footer>
+</body>
+</html>
