@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Development Services</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="/css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -14,8 +14,12 @@
         </div>
         <div class="nav-buttons">
             <a href="/about">About</a>
-            <a href="/registration" class="registr-btn">Sign Up</a>
-            <a href="/login" class="login-btn">Login</a>
+            <% if (session.logged_in) { %>
+                <a href="/logout" class="logout-btn">Logout</a>
+            <% } else { %>
+                <a href="/registration" class="registr-btn">Sign Up</a>
+                <a href="/login" class="login-btn">Login</a>
+            <% } %>
         </div>
     </header>
 
@@ -38,6 +42,6 @@
             <p class="register-link">Don't have an account? <a href="/registration">Sign Up</a></p>
         </div>
     </main>
-    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script src="/js/login.js"></script>
 </body>
-</html>
+</html> 

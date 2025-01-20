@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Development Services</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -14,8 +14,12 @@
         </div>
         <div class="nav-buttons">
             <a href="/about">About</a>
-            <a href="/registration" class="registr-btn">Sign Up</a>
-            <a href="/login" class="login-btn">Login</a>
+            <% if (session.logged_in) { %>
+                <a href="/logout" class="logout-btn">Logout</a>
+            <% } else { %>
+                <a href="/registration" class="registr-btn">Sign Up</a>
+                <a href="/login" class="login-btn">Login</a>
+            <% } %>
         </div>
     </header>
 
@@ -87,5 +91,4 @@
         <p>&copy; 2025 kovachvl. All rights reserved.</p>
     </footer>
 </body>
-</html>
-
+</html> 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - Our Team</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+    <link rel="stylesheet" href="/css/about.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -14,8 +14,12 @@
         </div>
         <div class="nav-buttons">
             <a href="/about">About</a>
-            <a href="/registration" class="registr-btn">Sign Up</a>
-            <a href="/login" class="login-btn">Login</a>
+            <% if (session.logged_in) { %>
+                <a href="/logout" class="logout-btn">Logout</a>
+            <% } else { %>
+                <a href="/registration" class="registr-btn">Sign Up</a>
+                <a href="/login" class="login-btn">Login</a>
+            <% } %>
         </div>
     </header>
 
@@ -26,7 +30,7 @@
             <div class="team-members">
                 <div class="team-member">
                     <div class="member-photo">
-                        <img src="{{ url_for('static', filename='images/developer1.jpg') }}" alt="Developer 1">
+                        <img src="/images/developer1.jpg" alt="Developer 1">
                     </div>
                     <h3>Developer Name 1</h3>
                     <p>Backend Developer</p>
@@ -35,7 +39,7 @@
 
                 <div class="team-member">
                     <div class="member-photo">
-                        <img src="{{ url_for('static', filename='images/developer2.jpg') }}" alt="Developer 2">
+                        <img src="/images/developer2.jpg" alt="Developer 2">
                     </div>
                     <h3>Developer Name 2</h3>
                     <p>Frontend Developer</p>
@@ -44,7 +48,7 @@
 
                 <div class="team-member">
                     <div class="member-photo">
-                        <img src="{{ url_for('static', filename='images/designer.jpg') }}" alt="Designer">
+                        <img src="/images/designer.jpg" alt="Designer">
                     </div>
                     <h3>Designer Name</h3>
                     <p>UI/UX Designer</p>
@@ -58,4 +62,4 @@
         <p>Copyright &copy; 2025 kovachvl. All rights reserved.</p>
     </footer>
 </body>
-</html>
+</html> 

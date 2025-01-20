@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Panel</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_panel.css') }}">
+    <link rel="stylesheet" href="/css/user_panel.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -13,11 +13,11 @@
             <a href="/">kovachvl</a>
         </div>
         <div class="profile-info">
-            <span>Welcome, {{ session['username'] }}</span>
+            <span>Welcome, <%= session.username %></span>
             <div class="profile-details">
-                <a href="/profile?id={{ session['user_id'] }}" class="profile-link" title="User ID: {{ session['user_id'] }}">
+                <a href="/profile?id=<%= session.user_id %>" class="profile-link" title="User ID: <%= session.user_id %>">
                     <i class="fas fa-user-circle"></i>
-                    <span class="user-id">ID: {{ session['user_id'] }}</span>
+                    <span class="user-id">ID: <%= session.user_id %></span>
                 </a>
             </div>
             <a href="/logout" class="logout-btn">Logout</a>
@@ -28,8 +28,7 @@
         <nav class="sidebar">
             <div class="balance-section">
                 <h3>Your Balance</h3>
-                <div class="balance" id="userBalance">$<span id="balanceAmount">0.00</span></div>
-                <!-- Уязвимость: можно получить бонус многократно -->
+                <div class="balance" id="userBalance">$<span id="balanceAmount"><%= balance.toFixed(2) %></span></div>
                 <button onclick="claimBonus()" class="bonus-btn" id="bonusBtn">Claim $100 Bonus</button>
             </div>
             <ul class="nav-menu">
@@ -70,44 +69,40 @@
     </div>
 
     <script>
-    // Уязвимый код для получения бонуса
-    async function claimBonus() {
-        // Уязвимость: нет проверки на повторное получение бонуса
-        const response = await fetch('/api/claim_bonus', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
+        async function claimBonus() {
+            const response = await fetch('/api/claim_bonus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('balanceAmount').textContent = data.balance.toFixed(2);
             }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            document.getElementById('balanceAmount').textContent = data.balance.toFixed(2);
-            // Уязвимость: кнопка не блокируется после получения бонуса
         }
-    }
 
-    // Функция покупки услуги
-    async function purchaseService(serviceName, price) {
-        const response = await fetch('/api/purchase_service', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                service: serviceName,
-                price: price
-            })
-        });
+        async function purchaseService(serviceName, price) {
+            const response = await fetch('/api/purchase_service', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    service: serviceName,
+                    price: price
+                })
+            });
 
-        if (response.ok) {
-            const data = await response.json();
-            document.getElementById('balanceAmount').textContent = data.balance.toFixed(2);
-            alert('Purchase successful!');
-        } else {
-            alert('Insufficient funds!');
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('balanceAmount').textContent = data.balance.toFixed(2);
+                alert('Purchase successful!');
+            } else {
+                alert('Insufficient funds!');
+            }
         }
-    }
     </script>
 </body>
-</html>
+</html> 

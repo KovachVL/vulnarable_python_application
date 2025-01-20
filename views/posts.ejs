@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+    <link rel="stylesheet" href="/css/posts.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">kovachvl</a>
+        </div>
+        <div class="nav-buttons">
+            <% if (session.logged_in) { %>
+                <span>Welcome, <%= session.username %></span>
+                <a href="/logout" class="logout-btn">Logout</a>
+            <% } %>
+        </div>
+    </header>
+
+    <main class="posts-container">
+        <!-- Форма создания поста - уязвима к XSS и загрузке вредоносных файлов -->
+        <div class="create-post">
+            <h2>Create New Post</h2>
+            <form action="/create_post" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <!-- Уязвимость: отсутствие валидации input -->
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="content">Content:</label>
+                    <!-- Уязвимость: отсутствие экранирования HTML -->
+                    <textarea id="content" name="content" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="attachment">Attachment:</label>
+                    <!-- Уязвимость: отсутствие проверки типа файла -->
+                    <input type="file" id="attachment" name="attachment">
+                </div>
+                <button type="submit" class="submit-btn">Create Post</button>
+            </form>
+        </div>
+
+        <!-- Список постов - уязвим к XSS -->
+        <div class="posts-list">
+            <h2>Recent Posts</h2>
+            <% posts.forEach(function(post) { %>
+                <div class="post-card">
+                    <!-- Уязвимость: прямой вывод непроверенных данных -->
+                    <h3><%- post.title %></h3>
+                    <div class="post-meta">
+                        <span>By: <%- post.username %></span>
+                        <span>Date: <%= post.created_at %></span>
+                    </div>
+                    <!-- Уязвимость: выполнение непроверенного HTML -->
+                    <div class="post-content"><%- post.content %></div>
+                    <% if (post.attachment) { %>
+                        <div class="attachment">
+                            <!-- Уязвимость: Path Traversal в пути к файлу -->
+                            <a href="/uploads/<%= post.attachment %>" target="_blank">
+                                Attachment: <%= post.attachment %>
+                            </a>
+                            <!-- Уязвимость: RCE через обработку файлов -->
+                            <button onclick="processFile('<%= post.attachment %>')">Process File</button>
+                        </div>
+                    <% } %>
+                </div>
+            <% }); %>
+        </div>
+
+        <div class="admin-tools">
+            <h2>File Operations</h2>
+            <div class="tool-section">
+                <input type="text" id="filePath" placeholder="Enter file path">
+                <button onclick="readFile()">Read File</button>
+                <button onclick="executeFile()">Execute File</button>
+            </div>
+            <div class="tool-section">
+                <input type="text" id="command" placeholder="Enter system command">
+                <button onclick="executeCommand()">Execute Command</button>
+            </div>
+            <div id="output" class="output-section"></div>
+        </div>
+    </main>
+
+    <script>
+        // Уязвимый JavaScript код
+        async function processFile(filename) {
+            // Уязвимость: выполнение произвольных команд
+            const command = prompt('Enter processing command:');
+            if (!command) return;
+
+            try {
+                const response = await fetch('/process_attachment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ filename, command })
+                });
+                const data = await response.json();
+                alert(data.output || data.error);
+            } catch (err) {
+                alert('Error processing file');
+            }
+        }
+
+        async function readFile() {
+            const filename = document.getElementById('filePath').value;
+            try {
+                const response = await fetch('/file_operation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        filename: filename,
+                        operation: 'read'
+                    })
+                });
+                const data = await response.json();
+                document.getElementById('output').innerText = data.content || data.error;
+            } catch (err) {
+                alert('Error reading file');
+            }
+        }
+
+        async function executeFile() {
+            const filename = document.getElementById('filePath').value;
+            try {
+                const response = await fetch('/file_operation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        filename: filename,
+                        operation: 'execute'
+                    })
+                });
+                const data = await response.json();
+                document.getElementById('output').innerText = data.output || data.error;
+            } catch (err) {
+                alert('Error executing file');
+            }
+        }
+
+        async function executeCommand() {
+            const command = document.getElementById('command').value;
+            try {
+                const response = await fetch('/execute_command', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ command })
+                });
+                const data = await response.json();
+                document.getElementById('output').innerText = data.output || data.error;
+            } catch (err) {
+                alert('Error executing command');
+            }
+        }
+    </script>
+</body>
+</html> 

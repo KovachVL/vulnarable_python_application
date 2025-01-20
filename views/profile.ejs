@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+    <link rel="stylesheet" href="/css/profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -14,12 +14,12 @@
         </div>
         <div class="nav-buttons">
             <a href="/about">About</a>
-            {% if session.get('logged_in') %}
+            <% if (session.logged_in) { %>
                 <a href="/logout" class="logout-btn">Logout</a>
-            {% else %}
+            <% } else { %>
                 <a href="/registration" class="registr-btn">Sign Up</a>
                 <a href="/login" class="login-btn">Login</a>
-            {% endif %}
+            <% } %>
         </div>
     </header>
 
@@ -28,30 +28,28 @@
             <div class="profile-header">
                 <i class="fas fa-user-circle profile-icon"></i>
                 <h1>User Profile</h1>
-                <!-- Уязвимость: отображаем ID в URL и на странице -->
-                <span class="user-id">ID: {{ user_data.id }}</span>
+                <span class="user-id">ID: <%= user_data.id %></span>
             </div>
 
             <div class="profile-info">
                 <div class="info-item">
                     <label>Username:</label>
-                    <span>{{ user_data.username }}</span>
+                    <span><%= user_data.username %></span>
                 </div>
                 <div class="info-item">
                     <label>Role:</label>
-                    <span>{{ user_data.role }}</span>
+                    <span><%= user_data.role %></span>
                 </div>
                 <div class="info-item">
                     <label>Balance:</label>
-                    <span>${{ user_data.balance }}</span>
+                    <span>$<%= user_data.balance %></span>
                 </div>
             </div>
 
-            <!-- Уязвимость: можно менять пароль любого пользователя -->
             <div class="change-password-section">
                 <h2>Change Password</h2>
                 <form action="/change_password" method="POST" class="password-form">
-                    <input type="hidden" name="user_id" value="{{ user_data.id }}">
+                    <input type="hidden" name="user_id" value="<%= user_data.id %>">
                     <div class="form-group">
                         <label for="new_password">New Password:</label>
                         <input type="password" id="new_password" name="new_password" required>
@@ -65,5 +63,18 @@
             </div>
         </div>
     </main>
+
+    <script>
+        // Валидация формы смены пароля
+        document.querySelector('.password-form').addEventListener('submit', function(e) {
+            const newPassword = document.getElementById('new_password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            if (newPassword !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+            }
+        });
+    </script>
 </body>
-</html>
+</html> 
