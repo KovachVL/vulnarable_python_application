@@ -18,13 +18,9 @@ def registration():
         username = request.form['username']
         password = request.form['password']
         
-        print("Получены данные:", username, password) 
-        
         if db.add_user(username, password):
-            print("Пользователь добавлен успешно") 
             return redirect(url_for('login'))
         else:
-            print("Ошибка при добавлении пользователя") 
             return "Registration failed. Username might already exist."
             
     return render_template('registration.html')
@@ -148,7 +144,49 @@ def change_password():
     
     return redirect(f'/profile?id={user_id}')
 
+@app.route('/posts')
+def posts():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    posts = db.get_all_posts()
+    posts_with_comments = []
+    for post in posts:
+        comments = db.get_comments(post[0])
+        posts_with_comments.append((post, comments))
+    return render_template('posts.html', posts=posts_with_comments)
+
+@app.route('/api/add_post', methods=['POST'])
+def add_post():
+    if not session.get('logged_in'):
+        return jsonify({'error': 'Unauthorized'}), 401
+    data = request.get_json()
+    content = data.get('content')
+    if not content:
+        return jsonify({'error': 'Content is required'}), 400
+        
+    if db.add_post(session['user_id'], session['username'], content):
+        return jsonify({'success': True})
+    
+    return jsonify({'error': 'Failed to add post'}), 500
+
+@app.route('/api/add_comment', methods=['POST'])
+def add_comment():
+    if not session.get('logged_in'):
+        return jsonify({'error': 'Unauthorized'}), 401
+        
+    data = request.get_json()
+    post_id = data.get('post_id')
+    content = data.get('content')
+    
+    if not content or not post_id:
+        return jsonify({'error': 'Missing required fields'}), 400
+        
+    if db.add_comment(post_id, session['user_id'], session['username'], content):
+        return jsonify({'success': True})
+    
+    return jsonify({'error': 'Failed to add comment'}), 500
+
 if __name__ == '__main__':
     db.create_tables()
     db.add_balance_column()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)

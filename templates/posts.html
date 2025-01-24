@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Posts</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/posts.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">kovachvl</a>
+        </div>
+        <div class="profile-info">
+            <span>Welcome, {{ session['username'] }}</span>
+            <div class="profile-details">
+                <a href="/profile?id={{ session['user_id'] }}" class="profile-link" title="User ID: {{ session['user_id'] }}">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+            </div>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="sidebar">
+            {% if session['role'] == 'admin' %}
+            <div class="stats-section">
+                <h3>Navigation</h3>
+                <ul class="nav-menu">
+                    <li><a href="/admin_panel"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/admin_panel#users"><i class="fas fa-users"></i> Users</a></li>
+                    <li><a href="/admin_panel#transactions"><i class="fas fa-history"></i> Transactions</a></li>
+                    <li><a href="/posts"><i class="fas fa-comments"></i> Community Posts</a></li>
+                    <li><a href="/admin_panel#settings"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+            {% else %}
+            <div class="user-section">
+                <h3>Navigation</h3>
+                <ul class="nav-menu">
+                    <li><a href="/user_panel"><i class="fas fa-shopping-cart"></i> Buy Services</a></li>
+                    <li><a href="/user_panel#transactions"><i class="fas fa-history"></i> Transaction History</a></li>
+                    <li><a href="/posts"><i class="fas fa-comments"></i> Community Posts</a></li>
+                    <li><a href="/user_panel#settings"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+            {% endif %}
+        </nav>
+
+        <main class="content">
+            <div class="post-form">
+                <textarea id="postContent" placeholder="What's on your mind?"></textarea>
+                <button onclick="submitPost()">Post</button>
+            </div>
+
+            <div class="posts-container">
+                {% for post, comments in posts %}
+                <div class="post">
+                    <div class="post-header">
+                        <div class="post-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="post-info">
+                            <div class="post-author">{{ post[2] }}</div>
+                            <div class="post-date">{{ post[4] }}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        {{ post[3]|safe }}
+                    </div>
+                    <div class="post-actions">
+                        <button>
+                            <i class="far fa-heart"></i>
+                            <span>Like</span>
+                        </button>
+                        <button>
+                            <i class="far fa-comment"></i>
+                            <span>Comment</span>
+                        </button>
+                    </div>
+                    
+                    <div class="comments-section">
+                        <div class="comment-form">
+                            <input type="text" placeholder="Write a comment..." class="comment-input">
+                            <button onclick="submitComment('{{ post[0] }}', this)">Send</button>
+                        </div>
+                        <div class="comments-list">
+                            {% for comment in comments %}
+                            <div class="comment">
+                                <div class="comment-header">
+                                    <span class="comment-author">{{ comment[3] }}</span>
+                                    <span class="comment-date">{{ comment[5] }}</span>
+                                </div>
+                                <div class="comment-content">
+                                    {{ comment[4]|safe }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/posts.js') }}"></script>
+</body>
+</html>

@@ -38,6 +38,31 @@ def create_tables():
             );
             """)
             
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS posts (
+                id INTEGER PRIMARY KEY,
+                user_id INTEGER,
+                username TEXT NOT NULL,
+                content TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                likes INTEGER DEFAULT 0,
+                FOREIGN KEY (user_id) REFERENCES users (id)
+            );
+            """)
+            
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS comments (
+                id INTEGER PRIMARY KEY,
+                post_id INTEGER,
+                user_id INTEGER,
+                username TEXT NOT NULL,
+                content TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (post_id) REFERENCES posts (id),
+                FOREIGN KEY (user_id) REFERENCES users (id)
+            );
+            """)
+            
             initial_users = [
                 (1, 'admin', 'admin123', 'admin', 0.0), 
                 (2, 'user1', 'password123', 'user', 0.0),
@@ -170,3 +195,59 @@ def add_balance_column():
         finally:
             conn.close()
     return False
+
+def add_post(user_id, username, content):
+    conn = create_connection()
+    if conn is not None:
+        try:
+            cursor = conn.cursor()
+            query = """
+            INSERT INTO posts (user_id, username, content)
+            VALUES (?, ?, ?)
+            """
+            cursor.execute(query, (user_id, username, content))
+            conn.commit()
+            return True
+        finally:
+            conn.close()
+    return False
+
+def get_all_posts():
+    conn = create_connection()
+    if conn is not None:
+        try:
+            cursor = conn.cursor()
+            query = "SELECT * FROM posts ORDER BY created_at DESC"
+            cursor.execute(query)
+            return cursor.fetchall()
+        finally:
+            conn.close()
+    return []
+
+def add_comment(post_id, user_id, username, content):
+    conn = create_connection()
+    if conn is not None:
+        try:
+            cursor = conn.cursor()
+            query = """
+            INSERT INTO comments (post_id, user_id, username, content)
+            VALUES (?, ?, ?, ?)
+            """
+            cursor.execute(query, (post_id, user_id, username, content))
+            conn.commit()
+            return True
+        finally:
+            conn.close()
+    return False
+
+def get_comments(post_id):
+    conn = create_connection()
+    if conn is not None:
+        try:
+            cursor = conn.cursor()
+            query = "SELECT * FROM comments WHERE post_id = ? ORDER BY created_at ASC"
+            cursor.execute(query, (post_id,))
+            return cursor.fetchall()
+        finally:
+            conn.close()
+    return []
