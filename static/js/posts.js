@@ -22,7 +22,6 @@ async function submitPost() {
     }
 }
 
-// Добавим новую функцию для отправки комментариев
 async function submitComment(postId, button) {
     const commentInput = button.parentElement.querySelector('.comment-input');
     const content = commentInput.value;
@@ -68,7 +67,6 @@ async function likePost(postId, button) {
             const likeCount = button.querySelector('.like-count');
             likeCount.textContent = data.likes;
             
-            // Анимация для кнопки
             const heart = button.querySelector('i');
             heart.classList.remove('far');
             heart.classList.add('fas');

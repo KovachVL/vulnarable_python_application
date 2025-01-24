@@ -73,6 +73,15 @@ def create_tables():
             );
             """)
             
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS bonus_claims (
+                id INTEGER PRIMARY KEY,
+                user_id INTEGER,
+                claimed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users (id)
+            );
+            """)
+            
             initial_users = [
                 (1, 'admin', 'admin123', 'admin', 0.0), 
                 (2, 'user1', 'password123', 'user', 0.0),
@@ -267,8 +276,6 @@ def toggle_like(post_id, user_id):
     if conn is not None:
         try:
             cursor = conn.cursor()
-            
-            # Проверяем, лайкнул ли уже пользователь
             cursor.execute("""
             SELECT id FROM post_likes 
             WHERE post_id = ? AND user_id = ?
@@ -277,10 +284,8 @@ def toggle_like(post_id, user_id):
             existing_like = cursor.fetchone()
             
             if existing_like:
-                return False  # Уже поставлен лайк
+                return False 
             
-            # Уязвимость race condition здесь:
-            # Между проверкой и вставкой есть окно, когда можно отправить много запросов
             cursor.execute("""
             INSERT INTO post_likes (post_id, user_id)
             VALUES (?, ?)
@@ -299,3 +304,37 @@ def toggle_like(post_id, user_id):
         finally:
             conn.close()
     return 0
+
+def add_bonus_claim(user_id):
+    conn = create_connection()
+    if conn is not None:
+        try:
+            cursor = conn.cursor()
+            
+            cursor.execute("""
+            SELECT id FROM bonus_claims 
+            WHERE user_id = ?
+            """, (user_id,))
+            
+            if cursor.fetchone():
+                return False
+            
+            # Уязвимость race condition: между проверкой и вставкой
+            cursor.execute("""
+            INSERT INTO bonus_claims (user_id, claimed_at)
+            VALUES (?, CURRENT_TIMESTAMP)
+            """, (user_id,))
+            
+            cursor.execute("""
+            UPDATE users 
+            SET balance = balance + 100 
+            WHERE id = ?
+            """, (user_id,))
+            
+            conn.commit()
+            
+            cursor.execute("SELECT balance FROM users WHERE id = ?", (user_id,))
+            return cursor.fetchone()[0]
+        finally:
+            conn.close()
+    return None

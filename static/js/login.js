@@ -3,21 +3,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const username = document.getElementById('username');
     const password = document.getElementById('password');
 
-    // Функция для отображения ошибки
     function showError(input, message) {
         const errorElement = document.getElementById(input.id + 'Error');
         errorElement.textContent = message;
         input.classList.add('error');
     }
 
-    // Функция для очистки ошибки
     function clearError(input) {
         const errorElement = document.getElementById(input.id + 'Error');
         errorElement.textContent = '';
         input.classList.remove('error');
     }
 
-    // Валидация username
     function validateUsername() {
         if (username.value.trim() === '') {
             showError(username, 'Username is required');
@@ -31,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Валидация password
     function validatePassword() {
         if (password.value === '') {
             showError(password, 'Password is required');
@@ -45,11 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Валидация при вводе
     username.addEventListener('input', validateUsername);
     password.addEventListener('input', validatePassword);
 
-    // Валидация при отправке формы
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 

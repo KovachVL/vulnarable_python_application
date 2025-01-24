@@ -28,8 +28,7 @@
         <nav class="sidebar">
             <div class="balance-section">
                 <h3>Your Balance</h3>
-                <div class="balance" id="userBalance">$<span id="balanceAmount">0.00</span></div>
-                <!-- Уязвимость: можно получить бонус многократно -->
+                <div class="balance" id="userBalance">$<span id="balanceAmount">{{ "%.2f"|format(balance) }}</span></div>
                 <button onclick="claimBonus()" class="bonus-btn" id="bonusBtn">Claim $100 Bonus</button>
             </div>
             <ul class="nav-menu">
@@ -70,45 +69,6 @@
         </main>
     </div>
 
-    <script>
-    // Уязвимый код для получения бонуса
-    async function claimBonus() {
-        // Уязвимость: нет проверки на повторное получение бонуса
-        const response = await fetch('/api/claim_bonus', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            document.getElementById('balanceAmount').textContent = data.balance.toFixed(2);
-            // Уязвимость: кнопка не блокируется после получения бонуса
-        }
-    }
-
-    // Функция покупки услуги
-    async function purchaseService(serviceName, price) {
-        const response = await fetch('/api/purchase_service', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                service: serviceName,
-                price: price
-            })
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            document.getElementById('balanceAmount').textContent = data.balance.toFixed(2);
-            alert('Purchase successful!');
-        } else {
-            alert('Insufficient funds!');
-        }
-    }
-    </script>
+    <script src="{{ url_for('static', filename='js/user_panel.js') }}"></script>
 </body>
 </html>

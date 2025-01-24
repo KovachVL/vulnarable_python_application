@@ -28,7 +28,6 @@
             <div class="profile-header">
                 <i class="fas fa-user-circle profile-icon"></i>
                 <h1>User Profile</h1>
-                <!-- Уязвимость: отображаем ID в URL и на странице -->
                 <span class="user-id">ID: {{ user_data.id }}</span>
             </div>
 
@@ -47,7 +46,6 @@
                 </div>
             </div>
 
-            <!-- Уязвимость: можно менять пароль любого пользователя -->
             <div class="change-password-section">
                 <h2>Change Password</h2>
                 <form action="/change_password" method="POST" class="password-form">

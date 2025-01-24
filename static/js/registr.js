@@ -5,13 +5,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmPassword = document.getElementById('confirm-password');
 
     form.addEventListener('submit', function(e) {
-        // Уязвимость: минимальная валидация
         if (password.value !== confirmPassword.value) {
             e.preventDefault();
             alert('Passwords do not match');
             return;
         }
         
-        // Форма отправится автоматически
     });
 });

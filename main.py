@@ -75,12 +75,14 @@ def claim_bonus():
         return jsonify({'error': 'Unauthorized'}), 401
     
     user_id = session['user_id']
-    current_balance = db.get_user_balance(user_id)
-    new_balance = current_balance + 100
+    new_balance = db.add_bonus_claim(user_id)
     
-    db.update_balance(user_id, new_balance)
+    if new_balance is False:
+        return jsonify({'error': 'Bonus already claimed'}), 400
+    elif new_balance is None:
+        return jsonify({'error': 'Failed to claim bonus'}), 500
+        
     return jsonify({'balance': new_balance})
-
 
 @app.route('/api/purchase_service', methods=['POST'])
 def purchase_service():
