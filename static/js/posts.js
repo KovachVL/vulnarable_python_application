@@ -49,4 +49,35 @@ async function submitComment(postId, button) {
         console.error('Error:', error);
         alert('Failed to add comment');
     }
+}
+
+async function likePost(postId, button) {
+    try {
+        const response = await fetch('/api/like_post', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                post_id: postId
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const likeCount = button.querySelector('.like-count');
+            likeCount.textContent = data.likes;
+            
+            // Анимация для кнопки
+            const heart = button.querySelector('i');
+            heart.classList.remove('far');
+            heart.classList.add('fas');
+            setTimeout(() => {
+                heart.classList.remove('fas');
+                heart.classList.add('far');
+            }, 200);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
 } 

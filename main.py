@@ -186,7 +186,24 @@ def add_comment():
     
     return jsonify({'error': 'Failed to add comment'}), 500
 
+@app.route('/api/like_post', methods=['POST'])
+def like_post():
+    if not session.get('logged_in'):
+        return jsonify({'error': 'Unauthorized'}), 401
+        
+    data = request.get_json()
+    post_id = data.get('post_id')
+    
+    if not post_id:
+        return jsonify({'error': 'Missing post_id'}), 400
+        
+    new_likes = db.toggle_like(post_id, session['user_id'])
+    if new_likes is False:
+        return jsonify({'error': 'Already liked'}), 400
+        
+    return jsonify({'likes': new_likes})
+
 if __name__ == '__main__':
     db.create_tables()
     db.add_balance_column()
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)

@@ -71,9 +71,9 @@
                         {{ post[3]|safe }}
                     </div>
                     <div class="post-actions">
-                        <button>
+                        <button onclick="likePost('{{ post[0] }}', this)" class="like-btn">
                             <i class="far fa-heart"></i>
-                            <span>Like</span>
+                            <span class="like-count">{{ post[5] }}</span> Likes
                         </button>
                         <button>
                             <i class="far fa-comment"></i>

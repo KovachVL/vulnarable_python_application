@@ -378,4 +378,28 @@ header {
     .comment {
         margin-left: 1rem;
     }
+}
+
+.like-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.like-btn:hover {
+    color: #e74c3c;
+}
+
+.like-btn i {
+    transition: transform 0.2s ease;
+}
+
+.like-btn:hover i {
+    transform: scale(1.2);
+}
+
+.like-count {
+    font-weight: bold;
+    margin: 0 0.2rem;
 } 
