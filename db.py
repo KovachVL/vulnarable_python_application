@@ -319,7 +319,6 @@ def add_bonus_claim(user_id):
             if cursor.fetchone():
                 return False
             
-            # Уязвимость race condition: между проверкой и вставкой
             cursor.execute("""
             INSERT INTO bonus_claims (user_id, claimed_at)
             VALUES (?, CURRENT_TIMESTAMP)

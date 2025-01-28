@@ -150,12 +150,25 @@ def change_password():
 def posts():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
+    
+    url = request.args.get('url', '')
+    external_content = None
+    if url:
+        try:
+            import requests
+            response = requests.get(url)
+            external_content = response.text
+        except:
+            external_content = "Failed to load external content"
+    
     posts = db.get_all_posts()
     posts_with_comments = []
     for post in posts:
         comments = db.get_comments(post[0])
         posts_with_comments.append((post, comments))
-    return render_template('posts.html', posts=posts_with_comments)
+    return render_template('posts.html', 
+                         posts=posts_with_comments,
+                         external_content=external_content)
 
 @app.route('/api/add_post', methods=['POST'])
 def add_post():
@@ -208,4 +221,4 @@ def like_post():
 if __name__ == '__main__':
     db.create_tables()
     db.add_balance_column()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(debug=True)
