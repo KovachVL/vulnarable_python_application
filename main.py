@@ -221,4 +221,4 @@ def like_post():
 if __name__ == '__main__':
     db.create_tables()
     db.add_balance_column()
-    app.run(debug=True)
+    app.run(host='0.0.0.0')
